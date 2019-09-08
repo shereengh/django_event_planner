@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Detail{% endblock title %}
+{% load crispy_forms_tags %}
+{% block content %}
+		<div class="row">
+			<div class="col-12">
+			<center>	
+				<div class="card my-5" id="bgc">
+			 <div class="card-body">
+			  	<center>
+			  		<h5 class="card-title">{{event.title}}</h5>
+			  	    <p class="card-text">{{event.datetime}}</p>
+			  	    <p class="card-text">{{event.description}}</p>
+			  	    <p class="card-text">{{event.seats}} tickets available</p>
+			  	    <p class="card-text">{{event.location}} </p>
+
+			  	    {% if request.user == event.organizer %}
+			  	    <a href="{% url 'event-update' event.id %}" class="btn btn-primary">Update Details</a>
+			  	    {% endif %}
+			  </center>
+			  </div>
+			  </div>
+			</center>
+			</div>
+		</div>
+{% endblock content %}
+

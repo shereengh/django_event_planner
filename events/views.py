@@ -1,8 +1,11 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.views import View
-from .forms import UserSignup, UserLogin
-
+from .forms import UserSignup, UserLogin, EventForm, ReserveForm
+from django.contrib import messages
+from .models import Event, Reserve
+from datetime import datetime
+from django.db.models import Q
 def home(request):
     return render(request, 'home.html')
 
@@ -59,3 +62,78 @@ class Logout(View):
         messages.success(request, "You have successfully logged out.")
         return redirect("login")
 
+def event_list(request):
+    today = datetime.today()
+    events = Event.objects.filter(datetime__gte=today)
+    query = request.GET.get('q')
+
+    if query:
+        events = events.filter(
+            Q(title__icontains=query)|
+            Q(description__icontains=query)|
+            Q(organizer__username__icontains=query)
+            ).distinct()
+    context = {
+        "events": events ,
+    }
+    return render(request, 'list.html', context)
+
+def my_event_list(request):
+    context = {
+        "events": Event.objects.filter(organizer=request.user),
+    }
+    return render(request, 'dashboard.html', context)
+
+def event_detail(request,event_id):
+    context={
+    "event": Event.objects.get(id=event_id)
+    }
+    return render(request, "detail.html", context)
+
+
+def event_create(request):
+    #Complete Me
+    form = EventForm()
+    if request.method == "POST":
+        form = EventForm(request.POST)
+        if form.is_valid():
+            event=form.save(commit=False)
+            event.organizer = request.user
+            event = form.save()
+            return redirect('dashboard')
+    context = {
+        "form":form,
+    }
+    return render(request, 'create.html', context)
+
+def event_update(request, event_id):
+    event_obj = Event.objects.get(id=event_id)
+    form = EventForm(instance=event_obj)
+    if request.user== event_obj.organizer:
+        if request.method == "POST":
+            form = EventForm(request.POST, request.FILES,instance=event_obj)
+            if form.is_valid():
+                form.save()
+                messages.success(request, "Event has been updated successfully!")
+                return redirect(event_obj)
+    context = {
+        "form":form,
+        "event": event_obj,
+        
+    }
+    return render(request, 'update.html', context)
+
+    '''
+def event_book(request,event_id):
+    #Complete Me
+    form = ReserveForm()
+    if request.method == "POST":
+        form = ReserveForm(request.POST)
+        if form.is_valid():
+            event = form.save()
+            return redirect('dashboard')
+    context = {
+        "form":form,
+    }
+    return render(request, 'create.html', context)
+    '''
