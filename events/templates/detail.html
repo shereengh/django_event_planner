@@ -11,17 +11,57 @@
 			  		<h5 class="card-title">{{event.title}}</h5>
 			  	    <p class="card-text">{{event.datetime}}</p>
 			  	    <p class="card-text">{{event.description}}</p>
-			  	    <p class="card-text">{{event.seats}} tickets available</p>
+			  	    <p class="card-text">{{event.left_seats}}/{{event.seats}} tickets available</p>
 			  	    <p class="card-text">{{event.location}} </p>
+					
 
 			  	    {% if request.user == event.organizer %}
 			  	    <a href="{% url 'event-update' event.id %}" class="btn btn-primary">Update Details</a>
+			  	    
+			  	    {% else %}
+			  	    {% if event.is_full %}
+			  	    <button disabled class="btn btn-primary">Full</button>
+			  	    {% else %}
+			  	    <a href="{% url 'event-book' event.id %}" class="btn btn-primary">Book Seats</a>
 			  	    {% endif %}
+					{% endif %}
 			  </center>
 			  </div>
 			  </div>
 			</center>
 			</div>
+
 		</div>
+		<br><br>
+		<center>
+		<div>
+		 
+ {% if  request.user == event.organizer %}
+
+		<table style="width:20%">
+	<thead>
+  <tr>
+    <th>Name</th>
+    <th>Number of tickets</th> 
+ 
+    
+  </tr>
+</thead>
+<tbody>
+  {% for reserve in reserves  %}
+  <tr>
+  	<td>{{reserve.user.username}}</td>
+  	<td>{{reserve.amount}}</td>
+  </tr>
+  {% endfor %}
+</tbody>
+</table>
+
+   {% endif %}
+   </div>
+</center>
+</div>
+
+
 {% endblock content %}
 

@@ -66,27 +66,34 @@ def event_list(request):
     today = datetime.today()
     events = Event.objects.filter(datetime__gte=today)
     query = request.GET.get('q')
-
     if query:
         events = events.filter(
             Q(title__icontains=query)|
             Q(description__icontains=query)|
             Q(organizer__username__icontains=query)
             ).distinct()
+
     context = {
         "events": events ,
     }
     return render(request, 'list.html', context)
 
 def my_event_list(request):
+    events = Event.objects.filter(organizer=request.user)
+    if not events:
+        messages.warning(request, "User has not organized any events")
+
     context = {
-        "events": Event.objects.filter(organizer=request.user),
+        "events": events,
     }
     return render(request, 'dashboard.html', context)
 
 def event_detail(request,event_id):
+    event = Event.objects.get(id=event_id)
+    reserves = Reserve.objects.filter(event=event)
     context={
-    "event": Event.objects.get(id=event_id)
+    "event": event ,
+    "reserves": reserves,
     }
     return render(request, "detail.html", context)
 
@@ -123,17 +130,28 @@ def event_update(request, event_id):
     }
     return render(request, 'update.html', context)
 
-    '''
 def event_book(request,event_id):
-    #Complete Me
+    event= Event.objects.get(id=event_id)
     form = ReserveForm()
     if request.method == "POST":
         form = ReserveForm(request.POST)
         if form.is_valid():
-            event = form.save()
-            return redirect('dashboard')
+            book = form.save(commit=False)
+            book.event= event
+            book.user = request.user
+            book.save()
+            return redirect("event-detail", event_id)
     context = {
         "form":form,
+        "event":event,
+
     }
-    return render(request, 'create.html', context)
-    '''
+    return render(request, 'book.html', context)
+
+def prev_event(request):
+    today = datetime.today()
+    reserves = Reserve.objects.filter(user=request.user, event__datetime__lte=today)
+    context = {
+        "reserves": reserves,
+    }
+    return render(request, 'prev.html', context)

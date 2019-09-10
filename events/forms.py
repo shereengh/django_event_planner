@@ -26,3 +26,4 @@ class ReserveForm(forms.ModelForm):
     class Meta:
         model = Reserve
         fields = ['amount']
+

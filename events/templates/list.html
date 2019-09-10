@@ -2,6 +2,7 @@
 {% block title %}Events{% endblock title %}
 {% block content %}
 <br><br><br>
+
 <form action="{% url 'event-list' %}">
 <div class="input-group mb-3">
   <input type="text" class="form-control" placeholder="Search list" name="q">
@@ -10,6 +11,7 @@
   </div>
 </div>
 </form>
+
   <br>
   <div class="row">
 	{% for event in events %}
@@ -21,6 +23,7 @@
 			  	<p class="card-text">{{event.tickets}} tickets available</p>
 			  	<p class="card-text">{{event.location}} </p>
 			  	<p class="card-text">{{event.description}} tickets available</p>
+			  	
 			  	<a href="{{event.get_absolute_url}}" class="btn btn-primary">Read details</a>
 	</div>
 </div>
