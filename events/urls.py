@@ -18,8 +18,9 @@ urlpatterns = [
     path('events/<int:event_id>/update/', views.event_update, name='event-update'),
     path('events/<int:event_id>/book/', views.event_book, name='event-book'),
     path('prevevents/', views.prev_event, name='prev-events'),
-
-    path('token/', TokenObtainPairView.as_view(), name="login"),
+    path('events/myevents/',views.bookingslist, name='my-bookings'),
+    path('events/<int:reserve_id>/cancel/', views.cancel_booking, name='cancel-booking'),
+   # path('token/', TokenObtainPairView.as_view(), name="login"),
     path('register/', api.Register.as_view(), name="register" ),
     path('events/upcoming/', api.UpcomingEventList.as_view(), name="upcoming-list" ),
     path('events/userlist/', api.UserEventsList.as_view(), name="user-list" ),

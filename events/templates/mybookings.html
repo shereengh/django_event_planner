@@ -1,0 +1,32 @@
+{% extends "base.html" %}  
+{% block title %}Events{% endblock title %}
+{% block content %}
+<br><br><br>
+
+  <br>
+  <div class="row">
+	{% for reserve in reserves %}
+	<div class="col-md-4">
+		<div class="card my-5" style="width: 18rem;">
+			  <div class="card-body">
+			  	<h5 class="card-title">{{reserve.event.title}}</h5>
+			  	<p class="card-text">{{resrve.event.datetime}}</p>
+			  	<p class="card-text">{{resrve.event.location}}</p>
+			  	<p class="card-text">{{resrve.event.description}}</p>
+			  	 {% if reserve.event.can_cancel%}
+			  	<a href="{% url 'cancel-booking' reserve.id %}" class="btn btn-primary">Cancel Booking</a>
+			  	{% else %}
+			  	<button disabled class="btn btn-primary">Cancel Booking</button>
+			  	{% endif %}
+
+	</div>
+</div>
+</div>
+	{% endfor %}
+</div>
+
+
+
+
+	
+{% endblock content %}

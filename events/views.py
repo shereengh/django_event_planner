@@ -155,3 +155,17 @@ def prev_event(request):
         "reserves": reserves,
     }
     return render(request, 'prev.html', context)
+
+
+def bookingslist(request):
+    reserves = Reserve.objects.filter(user=request.user)
+    context = {
+        "reserves": reserves,
+    }
+    return render(request, 'mybookings.html', context)
+
+def cancel_booking(request, reserve_id):
+    book_obj = Reserve.objects.get(id=reserve_id)
+    book_obj.delete()
+    messages.warning(request, "You canceled your booking!")
+    return redirect('my-bookings')

@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse
 from django.contrib.auth.models import User
+from datetime import datetime, timedelta
 
 class Event(models.Model):
 	organizer = models.ForeignKey(User, on_delete=models.CASCADE,)
@@ -30,6 +31,17 @@ class Event(models.Model):
 			return True 
 		else:
 			return False
+	
+	def can_cancel(self):
+		#now=datetime.now()
+		#time= now.hours+timedelta(hours=3)
+		check = datetime.now()
+		if (self.datetime.year <= check.year):
+			if (self.datetime.month <= check.month ):
+				if(self.datetime.day <= check.day):
+					if((self.datetime.hour - check.hour)<3):
+						return False
+		return True
 
 	def track_user(self):
 		for item in self.reserves.all():
