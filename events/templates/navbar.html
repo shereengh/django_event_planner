@@ -23,6 +23,7 @@
           {{ request.user }}
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="{% url 'profile' user.id %}">My profile</a>
           <a class="dropdown-item" href="{% url 'dashboard' %}">Organized Events</a>
           <a class="dropdown-item" href="{% url 'my-bookings' %}">Booked Events</a>
           <a class="dropdown-item" href="{% url 'prev-events' %}">Event History</a>

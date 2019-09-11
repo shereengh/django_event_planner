@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.views import View
-from .forms import UserSignup, UserLogin, EventForm, ReserveForm
+from .forms import UserSignup, UserLogin, EventForm, ReserveForm, ProfileForm
 from django.contrib import messages
-from .models import Event, Reserve
+from .models import Event, Reserve, Profile
 from datetime import datetime
 from django.db.models import Q
 def home(request):
@@ -41,7 +41,6 @@ class Login(View):
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
         if form.is_valid():
-
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
 
@@ -169,3 +168,36 @@ def cancel_booking(request, reserve_id):
     book_obj.delete()
     messages.warning(request, "You canceled your booking!")
     return redirect('my-bookings')
+'''
+def create_profile(request):
+    profile = Profile.objects.get(user=request.user)
+    context = {
+        "profile": profile
+    }
+    return render(request, 'profile.html',context)
+'''
+def view_profile(request, user_id):
+    profile = Profile.objects.get(user=user_id)
+    print("!!!!!!!!!!!")
+    context = {
+        "profile": profile
+    }
+    return render(request, 'profile.html',context)
+
+
+def profile_update(request, user_id):
+    profile_obj = Profile.objects.get(user=user_id)
+    form = ProfileForm(instance=profile_obj)
+    if request.user== profile_obj.user:
+        if request.method == "POST":
+            form = ProfileForm(request.POST, instance=profile_obj)
+            if form.is_valid():
+                form.save()
+                messages.success(request, "Profile has been updated successfully!")
+                return redirect('event-list')
+    context = {
+        "form":form,
+        "profile": profile_obj,
+        
+    }
+    return render(request, 'updateprofile.html', context)
