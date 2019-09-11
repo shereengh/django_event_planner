@@ -9,7 +9,6 @@ from .permissions import IsOrganizer
 # Create your views here.
 
 class UpcomingEventList(ListAPIView):
-	queryset = Event.objects.all()
 	serializer_class = EventSerializer
 
 	def get_queryset(self):
@@ -17,7 +16,6 @@ class UpcomingEventList(ListAPIView):
 
 
 class UserEventsList(ListAPIView):
-	queryset = Reserve.objects.all()
 	serializer_class = ReserveSerializer
 	permission_classes = [IsAuthenticated]
 	def get_queryset(self):
@@ -41,11 +39,9 @@ class UpdateEvent(RetrieveUpdateAPIView):
 	queryset = Event.objects.all()
 	lookup_field = 'id'
 	lookup_url_kwarg = 'event_id'
-	permission_classes = [IsAuthenticated, IsAdminUser]
+	serializer_class = CreateEventSerializer
+	permission_classes = [IsAuthenticated, IsOrganizer]
 
-	def get_serializer_class(self):
-		if self.request.user.is_staff:
-			return CreateEventSerializer
 
 class OrganizerEventUserList(ListAPIView):
 	serializer_class = ReserveSerializer

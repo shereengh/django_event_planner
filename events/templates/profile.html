@@ -1,20 +1,61 @@
-<!doctype html>
-<html lang="en">
+{% extends "base.html" %}  
+{% load static %}
+{% block title %}Profile{% endblock title %}
+{% block content %}
+<header class="masthead text-center">
+  <div class="masthead-content">
+  	<center>
+    <div class="container">
+    <div class="row">
+	<div class="col">
+		<div class="card my-5" style="width: 50rem;">
+			  <div class="card-body">
+			  	
+			  	<img src="{% static 'img/default3.png' %}" class="card-img-top">
+			  	<br><br><br>
+			  	<div class="row" style="margin-left:25%">
+			  		<div class='col-4'>
+    			<h3>Username: </h3>
+    			</div>
+    			<div class='col-auto'>
+    			<h3>{{profile.user.username}}</h3>
+    			</div>
+			  	</div>
 
-  <head>
+			  	<div class="row" style="margin-left:25%">
+			  		<div class='col-4'>
+    			<h3>Name: </h3>
+    			</div>
+    			<div class='col-auto'>
+    			<h3>{{profile.user.first_name}} {{profile.user.last_name}}</h3>
+    			</div>
+			  	</div>
+			  	
+    			<div class="row" style="margin-left:25%">
+			  		<div class='col-4'>
+    			<h3>Email: </h3>
+    			</div>
+    			<div class='col-auto'>
+    			<h3>{{profile.user.email}}</h3>
+    			</div>
+			  	</div>
+    			
+				<br><br>
+    			<a href="{% url 'profile-update'%}" class="btn btn-primary">Update Profile</a>
+    
+			  </div>
+</div>
+</div>
+</div>
+   </div>
+  </div> </center>
 
-  </head>
 
-  <body>
+  <div class="bg-circle-1 bg-circle"></div>
+  <div class="bg-circle-2 bg-circle"></div>
+  <div class="bg-circle-3 bg-circle"></div>
+  <div class="bg-circle-4 bg-circle"></div>
+</header>
 
-    <h1>Profile!!!!!!!!!!!!</h1>
-    <h3>{{profile.user.username}}</h3>
-    <h3>{{profile.user.last_name}}</h3>
-    <h3>{{profile.user.email}}</h3>
-    <a href="{% url 'profile-update' user.id %}" class="btn btn-primary">Update Profile</a>
-   
-
-  </body>
-
-</html>
-
+	
+{% endblock content %}

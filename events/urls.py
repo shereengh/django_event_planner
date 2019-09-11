@@ -7,8 +7,6 @@ urlpatterns = [
     path('signup/', views.Signup.as_view(), name='signup'),
     path('login/', views.Login.as_view(), name='login'),
     path('logout/', views.Logout.as_view(), name='logout'),
-
-    path('',include('API.urls')),
     path('events/', views.event_list, name='event-list'),
     path('dashboard/', views.my_event_list, name='dashboard'),
     path('events/detail/<int:event_id>/', views.event_detail, name='event-detail'),
@@ -19,5 +17,5 @@ urlpatterns = [
     path('events/myevents/',views.bookingslist, name='my-bookings'),
     path('events/<int:reserve_id>/cancel/', views.cancel_booking, name='cancel-booking'),
     path('profile/<int:user_id>/', views.view_profile, name='profile'),
-    path('profile/update/<int:user_id>/', views.profile_update, name='profile-update'),
+    path('profile/update/', views.profile_update, name='profile-update'),
 ]

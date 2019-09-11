@@ -78,6 +78,7 @@ def event_list(request):
     return render(request, 'list.html', context)
 
 def my_event_list(request):
+    # maybe use related name
     events = Event.objects.filter(organizer=request.user)
     if not events:
         messages.warning(request, "User has not organized any events")
@@ -89,6 +90,7 @@ def my_event_list(request):
 
 def event_detail(request,event_id):
     event = Event.objects.get(id=event_id)
+    # maybe use related name
     reserves = Reserve.objects.filter(event=event)
     context={
     "event": event ,
@@ -99,6 +101,7 @@ def event_detail(request,event_id):
 
 def event_create(request):
     #Complete Me
+    # Check if user is logged in
     form = EventForm()
     if request.method == "POST":
         form = EventForm(request.POST)
@@ -113,6 +116,7 @@ def event_create(request):
     return render(request, 'create.html', context)
 
 def event_update(request, event_id):
+    # Permissions
     event_obj = Event.objects.get(id=event_id)
     form = EventForm(instance=event_obj)
     if request.user== event_obj.organizer:
@@ -138,6 +142,7 @@ def event_book(request,event_id):
             book = form.save(commit=False)
             book.event= event
             book.user = request.user
+
             book.save()
             return redirect("event-detail", event_id)
     context = {
@@ -164,6 +169,7 @@ def bookingslist(request):
     return render(request, 'mybookings.html', context)
 
 def cancel_booking(request, reserve_id):
+    # check 3 hour thing
     book_obj = Reserve.objects.get(id=reserve_id)
     book_obj.delete()
     messages.warning(request, "You canceled your booking!")
@@ -185,19 +191,15 @@ def view_profile(request, user_id):
     return render(request, 'profile.html',context)
 
 
-def profile_update(request, user_id):
-    profile_obj = Profile.objects.get(user=user_id)
-    form = ProfileForm(instance=profile_obj)
-    if request.user== profile_obj.user:
-        if request.method == "POST":
-            form = ProfileForm(request.POST, instance=profile_obj)
-            if form.is_valid():
-                form.save()
-                messages.success(request, "Profile has been updated successfully!")
-                return redirect('event-list')
+def profile_update(request):
+    form = ProfileForm(instance=request.user)
+    if request.method == "POST":
+        form = ProfileForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Profile has been updated successfully!")
+            return redirect('event-list')
     context = {
         "form":form,
-        "profile": profile_obj,
-        
     }
     return render(request, 'updateprofile.html', context)

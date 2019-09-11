@@ -1,6 +1,9 @@
 {% extends "base.html" %}  
 {% block title %}Events{% endblock title %}
 {% block content %}
+<header class="masthead text-center">
+  <div class="masthead-content">
+    <div class="container">
 <br><br><br>
 
   <br>
@@ -10,10 +13,10 @@
 		<div class="card my-5" style="width: 18rem;">
 			  <div class="card-body">
 			  	<h5 class="card-title">{{reserve.event.title}}</h5>
-			  	<p class="card-text">{{resrve.event.datetime}}</p>
-			  	<p class="card-text">{{resrve.event.location}}</p>
-			  	<p class="card-text">{{resrve.event.description}}</p>
-			  	 {% if reserve.event.can_cancel%}
+			  	<p class="card-text">{{reserve.event.datetime}}</p>
+			  	<p class="card-text">{{reserve.event.location}}</p>
+			  	<p class="card-text">{{reserve.event.description}}</p>
+			  	 {% if reserve.event.can_cancel %}
 			  	<a href="{% url 'cancel-booking' reserve.id %}" class="btn btn-primary">Cancel Booking</a>
 			  	{% else %}
 			  	<button disabled class="btn btn-primary">Cancel Booking</button>
@@ -28,5 +31,12 @@
 
 
 
-	
+	  </div>
+  </div>
+  <div class="bg-circle-1 bg-circle"></div>
+  <div class="bg-circle-2 bg-circle"></div>
+  <div class="bg-circle-3 bg-circle"></div>
+  <div class="bg-circle-4 bg-circle"></div>
+</header>
+
 {% endblock content %}

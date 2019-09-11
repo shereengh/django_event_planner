@@ -8,7 +8,7 @@ from django.dispatch import receiver
 from django.db.models.signals import post_save
 
 class Event(models.Model):
-	organizer = models.ForeignKey(User, on_delete=models.CASCADE,)
+	organizer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='events')
 	title = models.CharField(max_length=100)
 	datetime = models.DateTimeField() 
 	seats = models.PositiveIntegerField()
@@ -22,75 +22,17 @@ class Event(models.Model):
 		return reverse('event-detail', kwargs={'event_id':self.id})
 
 	def num_seats(self):
-		total = 0
-		for item in self.reserves.all():
-			total += item.amount
-		return total
+		return sum(self.reserves.all().values_list('amount', flat=True))
 
 	def left_seats(self):
 		return self.seats - self.num_seats()
 
 	def is_full(self):
-		if self.left_seats()==0:
-			return True 
-		else:
-			return False
+		return self.left_seats()==0
 	
 	def can_cancel(self):
-		#now=datetime.now()
-		#time= now.hours+timedelta(hours=3)
-		check = datetime.now()
-		if (self.datetime.year <= check.year):
-			if (self.datetime.month <= check.month ):
-				if(self.datetime.day <= check.day):
-					if((self.datetime.hour - check.hour)<3):
-						return False
-		return True
-
-	def track_user(self):
-		for item in self.reserves.all():
-			print(item.user.username)
-
-	def whenpublished(self):
-		now = timezone.now()
-		diff= now - self.datetime
-
-		if diff.days == 0 and diff.seconds >= 0 and diff.seconds < 60:
-			seconds= diff.seconds
-			if seconds == 1:
-				return str(seconds) +  "second ago"
-			else:
-			 return str(seconds) + " seconds ago"
-		if diff.days == 0 and diff.seconds >= 60 and diff.seconds < 3600:
-			minutes= math.floor(diff.seconds/60)
-			if minutes == 1:
-				return str(minutes) + " minute ago"
-			else:
-				return str(minutes) + " minutes ago"
-		if diff.days == 0 and diff.seconds >= 3600 and diff.seconds < 86400:
-			hours= math.floor(diff.seconds/3600)
-			if hours == 1:
-				return str(hours) + " hour ago"
-			else:
-				return str(hours) + " hours ago"
-		if diff.days >= 1 and diff.days < 30:
-			days= diff.days
-			if days == 1:
-				return str(days) + " day ago"
-			else:
-				return str(days) + " days ago"
-		if diff.days >= 30 and diff.days < 365:
-			months= math.floor(diff.days/30)
-			if months == 1:
-				return str(months) + " month ago"
-			else:
-				return str(months) + " months ago"
-		if diff.days >= 365:
-			years= math.floor(diff.days/365)
-			if years == 1:
-				return str(years) + " year ago"
-			else:
-				return str(years) + " years ago"	
+		diff = (self.datetime.replace(tzinfo=None) - datetime.now())
+		return (diff.days * 24 + diff.seconds // 3600)> 3
 
 class Reserve(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='users')
@@ -102,7 +44,10 @@ class Reserve(models.Model):
 
 
 class Profile(models.Model):
+	# switch to one to one
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
+	profilepic = models.ImageField(blank=True, null=True)
+	bio = models.TextField()
 	def __str__(self):
 		return str(self.user)
 
