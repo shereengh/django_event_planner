@@ -10,7 +10,7 @@ urlpatterns = [
     path('events/create/', views.CreateEvent.as_view(), name="create-event" ),
     path('events/update/<int:event_id>/', views.UpdateEvent.as_view(), name="update-event" ),
     path('events/organizerlist/<int:event_id>/', views.OrganizerEventUserList.as_view(), name="organizer-list"),
-    path('events/book/<int:event_id>/', views.CreateBook.as_view(), name = "create-book"),
+  #  path('events/book/<int:event_id>/', views.CreateBook.as_view(), name = "create-book"),
     path('events/view/<int:organizer_id>/', views.OrganizerEventsList.as_view(), name = "view-events"),
 
 ]

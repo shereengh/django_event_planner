@@ -6,6 +6,7 @@ from django.contrib import messages
 from .models import Event, Reserve, Profile
 from datetime import datetime
 from django.db.models import Q
+from django.core.mail import send_mail
 def home(request):
     return render(request, 'home.html')
 
@@ -100,8 +101,8 @@ def event_detail(request,event_id):
 
 
 def event_create(request):
-    #Complete Me
-    # Check if user is logged in
+    if request.user.is_anonymous:
+        return redirect('login')
     form = EventForm()
     if request.method == "POST":
         form = EventForm(request.POST)
@@ -117,6 +118,8 @@ def event_create(request):
 
 def event_update(request, event_id):
     # Permissions
+    if request.user.is_anonymous:
+        return redirect('login')
     event_obj = Event.objects.get(id=event_id)
     form = EventForm(instance=event_obj)
     if request.user== event_obj.organizer:
@@ -126,6 +129,8 @@ def event_update(request, event_id):
                 form.save()
                 messages.success(request, "Event has been updated successfully!")
                 return redirect(event_obj)
+    messages.warning(request, "You are not the organizer of the event!")
+    return redirect('event-list')
     context = {
         "form":form,
         "event": event_obj,
@@ -135,16 +140,30 @@ def event_update(request, event_id):
 
 def event_book(request,event_id):
     event= Event.objects.get(id=event_id)
-    form = ReserveForm()
+    form = ReserveForm()     
     if request.method == "POST":
         form = ReserveForm(request.POST)
         if form.is_valid():
             book = form.save(commit=False)
             book.event= event
             book.user = request.user
-
-            book.save()
-            return redirect("event-detail", event_id)
+            seats = event.left_seats()
+            if book.amount > seats:
+                messages.warning(request, "Booking exceeds amount of seats left!")
+            else:
+                book.save()
+                return redirect('event-list')
+                '''
+            else:
+                book.save()
+                send_mail(
+               'Your Booking Detail',
+               ('This is an automated email to confirm your booking. Your booking details are: Event- {} tickets- {}'.format(book.event.title,book.amount)) ,
+               'eventplanner481@gmail.com',
+               ['to@example.com'],
+               fail_silently=False,
+               )
+                return redirect("event-detail", event_id)'''
     context = {
         "form":form,
         "event":event,
@@ -184,9 +203,12 @@ def create_profile(request):
 '''
 def view_profile(request, user_id):
     profile = Profile.objects.get(user=user_id)
-    print("!!!!!!!!!!!")
+    events = Event.objects.filter(organizer=request.user)
+    if not events:
+        messages.warning(request, "User has not organized any events")
     context = {
-        "profile": profile
+        "profile": profile,
+        "events": events,
     }
     return render(request, 'profile.html',context)
 

@@ -2,9 +2,22 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
+<header class="masthead text-center">
+  <div class="masthead-content">
+    <div class="container">
+
 	<form action="{% url 'event-book' event.id %}" method="POST">
 		{% csrf_token %}
 		{{form|crispy}}
 		<input type="submit" value="Book" class="btn">
 	</form>
+<br> <br> <br>
+  </div>
+  </div>
+  <div class="bg-circle-1 bg-circle"></div>
+  <div class="bg-circle-2 bg-circle"></div>
+  <div class="bg-circle-3 bg-circle"></div>
+  <div class="bg-circle-4 bg-circle"></div>
+</header>
+
 {% endblock content %}

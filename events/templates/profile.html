@@ -9,9 +9,9 @@
     <div class="row">
 	<div class="col">
 		<div class="card my-5" style="width: 50rem;">
-			  <div class="card-body">
+			  <div class="card-body" id="ci">
 			  	
-			  	<img src="{% static 'img/default3.png' %}" class="card-img-top">
+			  	<img  id="ci" src="{% static 'img/default3.png' %}" class="card-img-top">
 			  	<br><br><br>
 			  	<div class="row" style="margin-left:25%">
 			  		<div class='col-4'>
@@ -49,12 +49,23 @@
 </div>
    </div>
   </div> </center>
+<center>
 
+  <div class="row">
 
-  <div class="bg-circle-1 bg-circle"></div>
-  <div class="bg-circle-2 bg-circle"></div>
-  <div class="bg-circle-3 bg-circle"></div>
-  <div class="bg-circle-4 bg-circle"></div>
+	{% for event in events %}
+	<div class="col-md-4">
+		<div class="card my-5" style="width: 18rem;">
+			  <div class="card-body">
+			  	<h5 class="card-title">{{event.title}}</h5>
+			  	<a href="{{event.get_absolute_url}}" class="btn btn-primary">Read details</a>
+
+					
+	</div>
+	</div>
+</div>
+	{% endfor %}
+</center>
 </header>
 
 	

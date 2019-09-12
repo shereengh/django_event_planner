@@ -48,8 +48,18 @@ class RegisterSerializer(serializers.ModelSerializer):
         new_user.set_password(password)
         new_user.save()
         return validated_data
-
+'''
 class ReserveCreateSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Reserve
 		fields = ['amount']
+'''
+'''
+class ReserveseCreateSerializer(serializers.Serializer):
+	user = serializers.ForeignKey(User, on_delete=models.CASCADE, related_name='users')
+	event = serializers.ForeignKey(Event, on_delete=models.CASCADE, related_name='reserves')
+	amount = serializers.PositiveIntegerField()
+
+	def create(self, validated_data):
+		return Reserve.objects.create(**validated_data)
+'''
