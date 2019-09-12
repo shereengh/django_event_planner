@@ -129,8 +129,9 @@ def event_update(request, event_id):
                 form.save()
                 messages.success(request, "Event has been updated successfully!")
                 return redirect(event_obj)
-    messages.warning(request, "You are not the organizer of the event!")
-    return redirect('event-list')
+    else:
+        messages.warning(request, "You are not the organizer of the event!")
+        return redirect('event-list')
     context = {
         "form":form,
         "event": event_obj,
@@ -139,6 +140,8 @@ def event_update(request, event_id):
     return render(request, 'update.html', context)
 
 def event_book(request,event_id):
+    if request.user.is_anonymous:
+        return redirect('login')
     event= Event.objects.get(id=event_id)
     form = ReserveForm()     
     if request.method == "POST":
@@ -154,7 +157,10 @@ def event_book(request,event_id):
                 book.save()
                 send_mail(
                'Your Booking Detail',
-               ('This is an automated email to confirm your booking. Your booking details are: Event- {} tickets- {}'.format(book.event.title,book.amount)) ,
+               ('''This is an automated email to confirm your booking. Your booking details are: 
+                Event: {}
+                tickets: {}
+                time: {}'''.format(book.event.title,book.amount, book.event.datetime)) ,
                'eventplanner481@gmail.com',
                [book.user.email],
                fail_silently=False,

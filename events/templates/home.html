@@ -8,7 +8,8 @@
       <br><br>
       <h2 class="masthead-subheading mb-0" style="font-family: 'Rock Salt', cursive;">You cover the experience</h2>
       {% if request.user.is_anonymous %}
-        <a href="{% url 'signup' %}" class="btn btn-primary btn-xl rounded-pill mt-5">Sign up to find events!</a>
+        <a href="{% url 'event-list' %}" class="btn btn-primary btn-xl rounded-pill mt-5">Find events!</a>
+        <a href="{% url 'signup' %}" class="btn btn-primary btn-xl rounded-pill mt-5">Sign up to book events!</a>  
       {% else %}
         <a href="{% url 'event-list' %}" class="btn btn-primary btn-xl rounded-pill mt-5">Find events!</a>
       {% endif %}
