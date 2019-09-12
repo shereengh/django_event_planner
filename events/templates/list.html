@@ -20,7 +20,9 @@
 	<div class="col-md-4">
 		<div class="card my-5" style="width: 18rem;">
 			  <div class="card-body">
-			  	<h5 class="card-title">{{event.title}}</h5>
+          <img src= "{{event.picture.url}}" class="card-img-top">
+          <br><br>
+			  	<h5 class="card-title" style="font-family: 'Permanent Marker',cursive">{{event.title}}</h5>
 			  	<p class="card-text">{{event.datetime}}</p>
 			  	<p class="card-text">{{event.left_seats}} tickets available</p>
 			  	<a href="{{event.get_absolute_url}}" class="btn btn-primary">Read details</a>

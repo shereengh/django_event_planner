@@ -6,7 +6,12 @@
 {% block title %}Create{% endblock title %}
 
 {% block content %}
-<div class="jumbotron bg-dark text-light">
+<header class="masthead text-center text-white">
+  <div class="masthead-content">
+    <div class="container">
+        <div class="jumbotron">
+          <h2 class="masthead-subheading mb-0" style="font-family: 'Permanent Marker',cursive">Create an Event</h2>
+          <br>
 <form action="{% url 'event-create' %}" method="POST" enctype="multipart/form-data">
   {% csrf_token %}
   {{form|crispy}}
@@ -14,4 +19,11 @@
   <input type="submit" value="Create" class="btn btn-outline-success btn-lg btn-block">
 </form>
 </div>
+</div>
+</div>
+<div class="bg-circle-1 bg-circle"></div>
+  <div class="bg-circle-2 bg-circle"></div>
+  <div class="bg-circle-3 bg-circle"></div>
+  <div class="bg-circle-4 bg-circle"></div>
+</header>
 {% endblock content %}

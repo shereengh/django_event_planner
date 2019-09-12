@@ -6,10 +6,11 @@
   <div class="masthead-content">
   	<center>
     <div class="container">
+    	<center><h1 style="font-family: 'Kalam', cursive; color: white; font-size:100px;">Profile</h1></center>
     <div class="row">
 	<div class="col">
 		<div class="card my-5" style="width: 50rem;">
-			  <div class="card-body" id="ci">
+			  <div class="card-body" >
 			  	
 			  	<img  id="ci" src="{% static 'img/default3.png' %}" class="card-img-top">
 			  	<br><br><br>
@@ -57,7 +58,10 @@
 	<div class="col-md-4">
 		<div class="card my-5" style="width: 18rem;">
 			  <div class="card-body">
-			  	<h5 class="card-title">{{event.title}}</h5>
+			  	<img src= "{{event.picture.url}}" class="card-img-top">
+			  	<br><br>
+			  	<h5 class="card-title" style="font-family: 'Permanent Marker',cursive">{{event.title}}</h5>
+			  	<br>
 			  	<a href="{{event.get_absolute_url}}" class="btn btn-primary">Read details</a>
 
 					

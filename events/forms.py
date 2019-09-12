@@ -19,7 +19,7 @@ class UserLogin(forms.Form):
 class EventForm(forms.ModelForm):
     class Meta:
         model = Event
-        fields = ['title', 'datetime','seats', 'location', 'description']
+        fields = ['title', 'datetime','seats', 'location', 'description', 'picture']
 
 
 class ReserveForm(forms.ModelForm):

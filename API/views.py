@@ -1,11 +1,11 @@
 
 from django.shortcuts import render
 from rest_framework.generics import ListAPIView, RetrieveAPIView, RetrieveUpdateAPIView, DestroyAPIView, CreateAPIView
-#from rest_framework.views import APIView
+from rest_framework.views import APIView
 from datetime import datetime
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from events.models import Event, Reserve
-from .serializers import EventSerializer, ReserveSerializer, RegisterSerializer, CreateEventSerializer#, ReserveCreateSerializer
+from .serializers import EventSerializer, ReserveSerializer, RegisterSerializer, CreateEventSerializer
 from .permissions import IsOrganizer, IsAvailable
 # Create your views here.
 
@@ -50,26 +50,27 @@ class OrganizerEventUserList(ListAPIView):
 	
 	def get_queryset(self):
 		return Reserve.objects.filter(event_id=self.kwargs['event_id'])
-'''
+
 class CreateBook(APIView):
 	permission_classes = [IsAuthenticated]
 
 	def post(self, request, event_id):
-		reserve = request.data.get('reserve')
+		tickets = request.data.get('tickets')
+		try:
+			tickets = int(tickets)
+		except:
+			return Response({"error": "Wrong value entered"})
 
-		serializer = ReserveSerializer(data=reserve)
-		if serializer.is_valid(raise_exception=True):
-			reserve_obj = serializer.save(commit=False)
-			seats =reserve_obj.amount
-			capacity = reserve_obj.left_seats()
-			if seats > capacity:
-				return Response({"error": "Booking exceeds amount of seats left!"})
-			else:
-				reserve_obj = serializer.save()
+		event = Event.objects.get(id=event_id)
+		if tickets > event.left_seats():
+			Reserve.objects.create(user=user, event=event, amount=tickets)
+			return Response("Booking created!")
+		else:
+			return Response({"error": "Booking exceeds amount of seats left!"})	
 
 
-		return Response()	
-'''
+		
+
 
 
 class OrganizerEventsList(ListAPIView):

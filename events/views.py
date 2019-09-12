@@ -105,7 +105,7 @@ def event_create(request):
         return redirect('login')
     form = EventForm()
     if request.method == "POST":
-        form = EventForm(request.POST)
+        form = EventForm(request.POST, request.FILES)
         if form.is_valid():
             event=form.save(commit=False)
             event.organizer = request.user
@@ -152,18 +152,14 @@ def event_book(request,event_id):
                 messages.warning(request, "Booking exceeds amount of seats left!")
             else:
                 book.save()
-                return redirect('event-list')
-                '''
-            else:
-                book.save()
                 send_mail(
                'Your Booking Detail',
                ('This is an automated email to confirm your booking. Your booking details are: Event- {} tickets- {}'.format(book.event.title,book.amount)) ,
                'eventplanner481@gmail.com',
-               ['to@example.com'],
+               [book.user.email],
                fail_silently=False,
                )
-                return redirect("event-detail", event_id)'''
+                return redirect("event-detail", event_id)
     context = {
         "form":form,
         "event":event,
